@@ -6,14 +6,14 @@ import { checkJWT } from "@/middlevares/JWT";
 const onPOST = async (req, res) => {
 	try {
 		const userId = await checkJWT(req, res);
-		const { word, translation, dictionary } = req.body;
+		const { word, translation, language } = req.body;
 
 		if (!userId || !word || !translation) {
 			throw new Error("Missing data");
 		}
 
 		const dictionaryResult = await sql`
-      SELECT id FROM dictionary WHERE user_id = ${userId} AND name = ${dictionary} LIMIT 1
+      SELECT id FROM dictionary WHERE user_id = ${userId} AND name = ${language} LIMIT 1
     `;
 
 		if (dictionaryResult.length === 0) {
@@ -47,12 +47,12 @@ const onPOST = async (req, res) => {
 const onDELETE = async (req, res) => {
 	try {
 		const id = await checkJWT(req, res);
-		const { typesID } = req.body;
+		const { wordsID } = req.body;
 
-		if (!id || !typesID) {
+		if (!id || !wordsID) {
 			throw new Error("no data");
 		}
-		const result = await sql`DELETE FROM types WHERE id = ${typesID}`;
+		const result = await sql`DELETE FROM types WHERE id = ${wordsID}`;
 
 		res.status(200).end();
 		return;
