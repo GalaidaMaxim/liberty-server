@@ -41,6 +41,24 @@ const onDELETE = async (req, res) => {
   }
 };
 
+const onGET = async (req, res) => {
+  try {
+    const id = await checkJWT(req, res);
+
+    if (!id) {
+      throw new Error("no data");
+    }
+    const result = await sql`SELECT * FROM dictionary WHERE user_id = ${id}`;
+
+    res.status(200).json(result);
+    return;
+  } catch (err) {
+    console.log(err.message);
+    res.status(400).end();
+    return;
+  }
+};
+
 export default async function handler(req, res) {
   cors(req, res);
   if (req.method === "POST") {
@@ -49,6 +67,10 @@ export default async function handler(req, res) {
   }
   if (req.method === "DELETE") {
     await onDELETE(req, res);
+    return;
+  }
+  if (req.method === "GET") {
+    await onGET(req, res);
     return;
   }
   res.status(404).end();
