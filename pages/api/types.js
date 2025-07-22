@@ -34,7 +34,7 @@ const onPATCH = async (req, res) => {
     }
     const result =
       await sql`UPDATE types SET name = ${name} WHERE id = ${id} RETURNING *`;
-    res.status(200).json(result);
+    res.status(200).json(result[0]);
 
     return;
   } catch (err) {
