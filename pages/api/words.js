@@ -89,9 +89,9 @@ const onPATCH = async (req, res) => {
     const result = await sql`
       UPDATE words
       SET ${word ? sql`word = ${word}` : sql``}
-      ${translation || type ? sql`,` : sql``}
+      ${word && (translation || type) ? sql`,` : sql``}
       ${translation ? sql`translation = ${translation}` : sql``}
-      ${type ? sql`,` : sql``}
+      ${(word || translation) && type ? sql`,` : sql``}
       ${type ? sql`type = ${type}` : sql``}
       WHERE id = ${id}
       RETURNING *
