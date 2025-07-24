@@ -7,7 +7,6 @@ const onPOST = async (req, res) => {
   try {
     const userId = await checkJWT(req, res);
     const { word, translation, type_id, dictionaryID } = req.body;
-    console.log(word, translation, type_id, dictionaryID);
 
     if (!userId || !word || !translation) {
       throw new Error("Missing data");
@@ -80,6 +79,31 @@ const onGET = async (req, res) => {
   }
 };
 
+const onPATCH = async (req, res) => {
+  try {
+    await checkJWT(req, res);
+
+    const { id } = req.query;
+    if (!id) throw new Error("Invalid ID");
+    const { word, translation, type } = req.body;
+    const result = await sql`
+      UPDATE words
+      SET ${word ? sql`word = ${word}` : sql``}
+      ${translation || type ? sql`,` : sql``}
+      ${translation ? sql`translation = ${translation}` : sql``}
+      ${type ? sql`,` : sql``}
+      ${type ? sql`type = ${type}` : sql``}
+      WHERE id = ${id}
+      RETURNING *
+    `;
+
+    res.status(200).json(result[0]);
+  } catch (err) {
+    console.error("PATCH error:", err);
+    res.status(400).json({ error: err.message });
+  }
+};
+
 export default async function handler(req, res) {
   cors(req, res);
   if (req.method === "POST") {
@@ -92,6 +116,10 @@ export default async function handler(req, res) {
   }
   if (req.method === "GET") {
     await onGET(req, res);
+    return;
+  }
+  if (req.method === "PATCH") {
+    await onPATCH(req, res);
     return;
   }
   res.status(404).end();
