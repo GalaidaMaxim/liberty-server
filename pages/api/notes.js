@@ -68,9 +68,8 @@ const onPATCH = async (req, res) => {
     await checkJWT(req, res);
 
     const { id } = req.query;
-    if (!id) throw new Error("Invalid ID");
     const { text } = req.body;
-    if (text) {
+    if (!text || !id) {
       throw new Error("no data");
     }
     const result =
