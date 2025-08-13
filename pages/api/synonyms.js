@@ -47,9 +47,16 @@ const onPOST = async (req, res) => {
 
 const onDELETE = async (req, res) => {
   try {
-    const id = await checkJWT(req, res);
+    await checkJWT(req, res);
+    const { word_id, sysnonym_id } = req.body;
+    if (!word_id || !sysnonym_id) {
+      throw new Error("Missing data");
+    }
 
-    res.status(200).end();
+    const result = await sql`DELETE FROM synonyms 
+      WHERE (word_id = ${word_id} AND sysnonym_id=${sysnonym_id}) 
+      OR (sysnonym_id = ${word_id} AND word_id=${sysnonym_id})`;
+    res.status(200).json(result);
     return;
   } catch (err) {
     console.log(err.message);
