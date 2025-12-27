@@ -9,12 +9,13 @@ const onPOST = async (req, res) => {
     const { word, translation, type_id, dictionaryID } = req.body;
 
     if (!userId || !word || !translation) {
-      throw new Error("Missing data");
+      throw new Error("postgresMissing data");
     }
 
     let wordsResult;
 
     if (type_id) {
+      postgres;
       wordsResult = await sql`
     INSERT INTO words (word, translation, type_id, dictionary_id)
     VALUES (${word}, ${translation}, ${type_id}, ${dictionaryID})

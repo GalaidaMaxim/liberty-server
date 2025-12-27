@@ -5,17 +5,17 @@ import { checkJWT } from "@/middlevares/JWT";
 
 const getSynonymsOfWord = async (word_id) => {
   const result = await sql`
-    WITH SID AS(SELECT sysnonym_id
+    WITH SID AS(SELECT synonym_id
     FROM synonyms
     WHERE word_id=${word_id}
     UNION
     SELECT word_id
     FROM synonyms
-    WHERE sysnonym_id=${word_id})
+    WHERE synonym_id=${word_id})
     SELECT * 
     FROM SID s
     JOIN words w
-    ON w.id = s.sysnonym_id
+    ON w.id = s.synonym_id
     `;
   return result;
 };
@@ -36,7 +36,7 @@ const onPOST = async (req, res) => {
       throw new Error("Already synonyms");
     }
     const result =
-      await sql`INSERT INTO synonyms (word_id, sysnonym_id) VALUES (${word_id}, ${sysnonym_id}) RETURNING *;`;
+      await sql`INSERT INTO synonyms (word_id, synonym_id) VALUES (${word_id}, ${sysnonym_id}) RETURNING *;`;
     res.status(200).json(result);
     return;
   } catch (err) {
@@ -54,8 +54,8 @@ const onDELETE = async (req, res) => {
     }
 
     const result = await sql`DELETE FROM synonyms 
-      WHERE (word_id = ${word_id} AND sysnonym_id=${sysnonym_id}) 
-      OR (sysnonym_id = ${word_id} AND word_id=${sysnonym_id})`;
+      WHERE (word_id = ${word_id} AND synonym_id=${sysnonym_id}) 
+      OR (synonym_id = ${word_id} AND word_id=${sysnonym_id})`;
     res.status(200).json(result);
     return;
   } catch (err) {
