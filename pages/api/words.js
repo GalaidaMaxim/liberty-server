@@ -45,7 +45,7 @@ const onDELETE = async (req, res) => {
     if (!id || !wordsID) {
       throw new Error("no data");
     }
-    const result = await sql`DELETE FROM types WHERE id = ${wordsID}`;
+    const result = await sql`DELETE FROM words WHERE id = ${wordsID}`;
 
     res.status(200).end();
     return;
