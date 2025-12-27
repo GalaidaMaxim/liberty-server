@@ -20,23 +20,23 @@ const getSynonymsOfWord = async (word_id) => {
   return result;
 };
 
-const checkPosibleSynonyms = async (word_id, sysnonym_id) => {
+const checkPosibleSynonyms = async (word_id, synonym_id) => {
   const list = await getSynonymsOfWord(word_id);
-  return !list.some((item) => "" + sysnonym_id == item.sysnonym_id);
+  return !list.some((item) => "" + synonym_id == item.synonym_id);
 };
 
 const onPOST = async (req, res) => {
   try {
     await checkJWT(req, res);
-    const { word_id, sysnonym_id } = req.body;
-    if (!word_id || !sysnonym_id) {
+    const { word_id, synonym_id } = req.body;
+    if (!word_id || !synonym_id) {
       throw new Error("Missing data");
     }
-    if (!(await checkPosibleSynonyms(word_id, sysnonym_id))) {
+    if (!(await checkPosibleSynonyms(word_id, synonym_id))) {
       throw new Error("Already synonyms");
     }
     const result =
-      await sql`INSERT INTO synonyms (word_id, synonym_id) VALUES (${word_id}, ${sysnonym_id}) RETURNING *;`;
+      await sql`INSERT INTO synonyms (word_id, synonym_id) VALUES (${word_id}, ${synonym_id}) RETURNING *;`;
     res.status(200).json(result);
     return;
   } catch (err) {
@@ -48,14 +48,14 @@ const onPOST = async (req, res) => {
 const onDELETE = async (req, res) => {
   try {
     await checkJWT(req, res);
-    const { word_id, sysnonym_id } = req.body;
-    if (!word_id || !sysnonym_id) {
+    const { word_id, synonym_id } = req.body;
+    if (!word_id || !synonym_id) {
       throw new Error("Missing data");
     }
 
     const result = await sql`DELETE FROM synonyms 
-      WHERE (word_id = ${word_id} AND synonym_id=${sysnonym_id}) 
-      OR (synonym_id = ${word_id} AND word_id=${sysnonym_id})`;
+      WHERE (word_id = ${word_id} AND synonym_id=${synonym_id}) 
+      OR (synonym_id = ${word_id} AND word_id=${synonym_id})`;
     res.status(200).json(result);
     return;
   } catch (err) {

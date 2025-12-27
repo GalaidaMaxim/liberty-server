@@ -54,7 +54,7 @@ const onDELETE = async (req, res) => {
     }
 
     const result = await sql`DELETE FROM antonyms 
-      WHERE (word_id = ${word_id} AND synonym_id=${antonym_id}) 
+      WHERE (word_id = ${word_id} AND antonym_id=${antonym_id}) 
       OR (antonym_id = ${word_id} AND word_id=${antonym_id})`;
     res.status(200).json(result);
     return;
