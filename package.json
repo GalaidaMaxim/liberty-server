@@ -12,7 +12,7 @@
     "axios": "^1.10.0",
     "bcrypt": "^6.0.0",
     "jsonwebtoken": "^9.0.2",
-    "next": "15.3.5",
+    "next": "15.3.8",
     "postgres": "^3.4.7",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
