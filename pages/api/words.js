@@ -15,7 +15,6 @@ const onPOST = async (req, res) => {
     let wordsResult;
 
     if (type_id) {
-      postgres;
       wordsResult = await sql`
     INSERT INTO words (word, translation, type_id, dictionary_id)
     VALUES (${word}, ${translation}, ${type_id}, ${dictionaryID})
